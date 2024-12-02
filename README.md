@@ -41,4 +41,4 @@ Your goal is to write a program that:
 
 When done, you can simply zip your project and share it with us over email
 
-### INCLUDE SE
+### INCLUDE SETUP INSTRUCTIONS
