@@ -4,9 +4,11 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true,
   },
-  //include money too
+  balance: {
+    type: Number,
+    default: 0,
+  },
 });
 
 export const userModel = mongoose.model("User", userSchema);
