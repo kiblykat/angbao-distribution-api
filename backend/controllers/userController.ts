@@ -12,3 +12,12 @@ export const getAllUsers = async (
     res.status(500).json({ err: err });
   }
 };
+
+export const createUser = async (req: Request, res: Response) => {
+  try {
+    const response = await userModel.create({ username: "newUsersr" });
+    res.status(201).json(response);
+  } catch (err) {
+    console.log({ err: err });
+  }
+};
