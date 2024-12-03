@@ -11,13 +11,29 @@ export const distributeAngbaos = async (
 
     //receive request from user
     let { currUserId, totAmount, userArray } = req.body;
+    if (!currUserId || !totAmount || !userArray) {
+      res.status(400).json({ error: "Invalid Input" });
+      return;
+    }
     const currUserAccount = await userModel.findById(currUserId);
-    console.log(`currUserAccount is ${currUserAccount}`);
 
-    //parse string to JS structure
+    //error handling for Insufficient funds
     totAmount = parseFloat(totAmount);
-    const userArrayParsed: string[] = JSON.parse(userArray);
-    console.log(totAmount, userArrayParsed);
+    if (currUserAccount) {
+      if (currUserAccount?.balance < totAmount) {
+        res.status(400).json({ error: "Insufficient funds" });
+        return;
+      }
+    }
+
+    //error handling for Invalid userArray
+    let userArrayParsed: string[];
+    try {
+      userArrayParsed = JSON.parse(userArray);
+    } catch (err) {
+      res.status(400).json({ err: "Invalid userArray" });
+      return;
+    }
 
     //populate the userHash
     for (let user of userArrayParsed) {
@@ -31,12 +47,14 @@ export const distributeAngbaos = async (
       userHash[userArrayParsed[i]] = angbaoAllocArray[i];
     }
 
+    //decrement currUser balance
     await userModel.findByIdAndUpdate(currUserId, {
       $inc: {
         balance: -totAmount,
       },
     });
 
+    //increment angbao participants balance
     for (let key in userHash) {
       await userModel.findByIdAndUpdate(key, {
         $inc: {
