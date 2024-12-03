@@ -6,26 +6,29 @@ export const distributeAngbaos = async (
   res: express.Response
 ) => {
   try {
-    let hash: { [key: string]: number } = {}; //take note of this definition*
+    let userHash: { [key: string]: number } = {}; //take note of this definition*
 
     //receive request from user
     let { totAmount, userArray } = req.body;
-    totAmount = parseFloat(totAmount);
 
+    //parse string to JS structure
+    totAmount = parseFloat(totAmount);
     const userArrayParsed: string[] = JSON.parse(userArray);
     console.log(totAmount, userArrayParsed);
 
+    //populate the userHash
     for (let user of userArrayParsed) {
-      hash[user] = 0;
+      userHash[user] = 0;
     }
     let numUsers = userArrayParsed.length;
-    let allocationArray: number[] = allocateRandomAmounts(totAmount, numUsers); //get allocationArray back from service
-    for (let i = 0; i < allocationArray.length; i++) {
-      hash[userArrayParsed[i]] = allocationArray[i];
+    let angbaoAllocArray: number[] = allocateRandomAmounts(totAmount, numUsers); //get angbaoAllocArray back from service
+
+    //assign users in userHash to allocation array
+    for (let i = 0; i < angbaoAllocArray.length; i++) {
+      userHash[userArrayParsed[i]] = angbaoAllocArray[i];
     }
-    res.status(200).json({ res: hash });
+    res.status(200).json({ res: userHash });
   } catch (err) {
     res.status(500).json({ err: err });
-  } finally {
   }
 };
