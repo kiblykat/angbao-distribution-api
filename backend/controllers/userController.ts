@@ -1,24 +1,22 @@
 import { userModel } from "../models/User";
 import { Request, Response } from "express";
 
-export const getAllUsers = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export async function getAllUsers(req: Request, res: Response): Promise<void> {
   try {
     const users = await userModel.find();
     res.status(200).json({ users: users });
   } catch (err) {
     res.status(500).json({ err: err });
   }
-};
+}
 
-export const createUser = async (req: Request, res: Response) => {
+export async function createUser(req: Request, res: Response): Promise<void> {
   try {
-    const response = await userModel.create({ username: "newUsersr" });
+    const user = req.body;
+    const response = await userModel.create({ username: user.username });
     res.status(201).json(response);
   } catch (err) {
     console.log({ err: err });
     res.status(500).json({ err: err });
   }
-};
+}
