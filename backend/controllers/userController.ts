@@ -40,3 +40,19 @@ export async function deleteUser(req: Request, res: Response): Promise<void> {
     res.status(500).json({ err: err });
   }
 }
+
+export async function getSingleUser(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+    const user = await userModel.findById(id);
+
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    res.status(200).json({ user });
+  } catch (err) {
+    res.status(500).json({ err: err });
+  }
+}
