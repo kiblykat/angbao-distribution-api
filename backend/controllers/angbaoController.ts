@@ -30,6 +30,20 @@ export const distributeAngbaos = async (
     for (let i = 0; i < angbaoAllocArray.length; i++) {
       userHash[userArrayParsed[i]] = angbaoAllocArray[i];
     }
+
+    await userModel.findByIdAndUpdate(currUserId, {
+      $inc: {
+        balance: -totAmount,
+      },
+    });
+
+    for (let key in userHash) {
+      await userModel.findByIdAndUpdate(key, {
+        $inc: {
+          balance: userHash[key],
+        },
+      });
+    }
     res.status(200).json({ res: userHash });
   } catch (err) {
     res.status(500).json({ err: err });
