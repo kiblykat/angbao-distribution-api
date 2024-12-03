@@ -1,6 +1,10 @@
 import express from "express";
 import { allocateRandomAmounts } from "../services/angbaoAllocator";
 import { userModel } from "../models/User";
+import {
+  dollarsToCents,
+  centsToDollars,
+} from "../services/dollarCentsConverter";
 
 export const distributeAngbaos = async (
   req: express.Request,
@@ -10,17 +14,17 @@ export const distributeAngbaos = async (
     let userHash: { [key: string]: number } = {}; //take note of this definition*
 
     //receive request from user
-    let { currUserId, totAmount, userArray } = req.body;
-    if (!currUserId || !totAmount || !userArray) {
+    let { currUserId, totAmountDollars, userArray } = req.body;
+    if (!currUserId || !totAmountDollars || !userArray) {
       res.status(400).json({ error: "Invalid Input" });
       return;
     }
     const currUserAccount = await userModel.findById(currUserId);
 
     //error handling for Insufficient funds
-    totAmount = parseFloat(totAmount);
+    const totAmountCents = dollarsToCents(parseFloat(totAmountDollars));
     if (currUserAccount) {
-      if (currUserAccount?.balance < totAmount) {
+      if (currUserAccount?.balance < totAmountCents) {
         res.status(400).json({ error: "Insufficient funds" });
         return;
       }
@@ -40,7 +44,10 @@ export const distributeAngbaos = async (
       userHash[user] = 0;
     }
     let numUsers = userArrayParsed.length;
-    let angbaoAllocArray: number[] = allocateRandomAmounts(totAmount, numUsers); //get angbaoAllocArray back from service
+    let angbaoAllocArray: number[] = allocateRandomAmounts(
+      totAmountCents,
+      numUsers
+    ); //get angbaoAllocArray back from service
 
     //assign users in userHash to allocation array
     for (let i = 0; i < angbaoAllocArray.length; i++) {
@@ -50,7 +57,7 @@ export const distributeAngbaos = async (
     //decrement currUser balance
     await userModel.findByIdAndUpdate(currUserId, {
       $inc: {
-        balance: -totAmount,
+        balance: -totAmountCents,
       },
     });
 

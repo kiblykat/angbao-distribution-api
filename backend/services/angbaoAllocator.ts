@@ -11,13 +11,13 @@ export const allocateRandomAmounts = (
   //repeat until no money left
   //lastly, addd the final remaining amount from the pool
   for (let i = 0; i < numUsers - 1; i++) {
-    let currAmount = Math.random() * remainingAmount;
-    currAmount = parseFloat(currAmount.toFixed(2)); //convert to 2 dp
+    let currAmount = Math.random() * remainingAmount; //floating point
+    currAmount = Math.floor(currAmount); //ensure integer to prevent float issues
     allocationArray.push(currAmount);
     remainingAmount -= currAmount;
   }
 
-  allocationArray.push(parseFloat(remainingAmount.toFixed(2)));
+  allocationArray.push(remainingAmount); //finally, push the remaining amount ensure all money used
 
   return allocationArray;
 };
