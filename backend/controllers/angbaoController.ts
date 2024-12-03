@@ -1,5 +1,6 @@
 import express from "express";
 import { allocateRandomAmounts } from "../services/angbaoAllocator";
+import { userModel } from "../models/User";
 
 export const distributeAngbaos = async (
   req: express.Request,
@@ -9,7 +10,9 @@ export const distributeAngbaos = async (
     let userHash: { [key: string]: number } = {}; //take note of this definition*
 
     //receive request from user
-    let { totAmount, userArray } = req.body;
+    let { currUserId, totAmount, userArray } = req.body;
+    const currUserAccount = await userModel.findById(currUserId);
+    console.log(`currUserAccount is ${currUserAccount}`);
 
     //parse string to JS structure
     totAmount = parseFloat(totAmount);
