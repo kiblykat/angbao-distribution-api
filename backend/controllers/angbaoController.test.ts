@@ -30,14 +30,14 @@ jest.mock("../services/dollarCentsConverter", () => ({
 }));
 
 describe("angbaoController", () => {
-  //correct return
+  //Status 200 returns
   it("should distribute angbaos and return status code 200", async () => {
     //1. Mock behavior of child funcs expected to be called within parent func
     //userModel.findById for currUser
     (userModel.findById as jest.Mock).mockResolvedValue({
       username: "ChocolateBar",
       balance: 10000,
-      _id: "6750535b525af836513a1f66",
+      _id: "abc123",
       __v: 0,
     });
     //dollarsToCents
@@ -47,30 +47,54 @@ describe("angbaoController", () => {
 
     //2. Call the function
     const response = await request(app).post("/angbaos/distribute").send({
-      currUserId: "6750535b525af836513a1f66",
+      currUserId: "user1",
       totAmountDollars: "10.23",
-      userArray:
-        '["674e7824a6cddab6818afe6f","674e79c0cba2edf55d536255","674e79c5cba2edf55d536257"]',
+      userArray: '["user2","user3","user4"]',
     });
 
     //3. List down expectations
     expect(response.status).toBe(200);
     expect(response.body.res).toEqual({
-      "674e7824a6cddab6818afe6f": 4000,
-      "674e79c0cba2edf55d536255": 3000,
-      "674e79c5cba2edf55d536257": 3000,
+      user2: 4000,
+      user3: 3000,
+      user4: 3000,
     });
   });
-  //invalid return
+
+  // Error Handling Returns
+  // - missing inputs
   it("should respond with 400 if missing input", async () => {
     const response = await request(app).post("/angbaos/distribute").send({
       currUserId: "",
       totAmountDollars: "1.03",
-      userArray:
-        '["6750535b525af836513a1f66","674e79c0cba2edf55d536255","674e79c5cba2edf55d536257"]',
+      userArray: '["user2","user3","user4"]',
     });
     expect(response.status).toBe(400);
+    expect(response.body).toEqual({ error: "Missing Input" });
   });
-  // it("should respond with 400 if insufficient funds");
-  // it("should respond with 400 if invalid userArray");
+
+  // - insufficient funds
+  it("should respond with 400 for insufficient funds", async () => {
+    (userModel.findById as jest.Mock).mockResolvedValue({ balance: 500 });
+    (dollarsToCents as jest.Mock).mockReturnValue(1023);
+    const response = await request(app).post("/angbaos/distribute").send({
+      currUserId: "user1",
+      totAmountDollars: "10.23",
+      userArray: '["user2", "user3"]',
+    });
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ error: "Insufficient funds" });
+  });
+
+  // - invalid userArray
+  it("should respond with 400 for invalid userArray", async () => {
+    (userModel.findById as jest.Mock).mockResolvedValue({ balance: 2000 });
+    const response = await request(app).post("/angbaos/distribute").send({
+      currUserId: "user1",
+      totAmountDollars: "10.23",
+      userArray: "[user2,user3,user4]",
+    });
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ error: "Invalid userArray" });
+  });
 });

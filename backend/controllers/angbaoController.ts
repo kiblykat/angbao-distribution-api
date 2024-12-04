@@ -40,7 +40,7 @@ export const distributeAngbaos = async (
     try {
       userArrayParsed = JSON.parse(userArray);
     } catch (err) {
-      res.status(400).json({ err: "Invalid userArray" });
+      res.status(400).json({ error: "Invalid userArray" });
       return;
     }
 
@@ -78,6 +78,6 @@ export const distributeAngbaos = async (
     }
     res.status(200).json({ res: userHash });
   } catch (err) {
-    res.status(500).json({ err: err });
+    res.status(500).json({ error: err });
   }
 };
