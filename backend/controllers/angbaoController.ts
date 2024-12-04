@@ -43,11 +43,13 @@ export const distributeAngbaos = async (
     for (let user of userArrayParsed) {
       userHash[user] = 0;
     }
+
+    //get angbaoAllocArray from service
     let numUsers = userArrayParsed.length;
     let angbaoAllocArray: number[] = allocateRandomAmounts(
       totAmountCents,
       numUsers
-    ); //get angbaoAllocArray back from service
+    );
 
     //assign users in userHash to allocation array
     for (let i = 0; i < angbaoAllocArray.length; i++) {
