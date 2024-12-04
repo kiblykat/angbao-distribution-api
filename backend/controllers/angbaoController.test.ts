@@ -62,4 +62,15 @@ describe("angbaoController", () => {
     });
   });
   //invalid return
+  it("should respond with 400 if missing input", async () => {
+    const response = await request(app).post("/angbaos/distribute").send({
+      currUserId: "",
+      totAmountDollars: "1.03",
+      userArray:
+        '["6750535b525af836513a1f66","674e79c0cba2edf55d536255","674e79c5cba2edf55d536257"]',
+    });
+    expect(response.status).toBe(400);
+  });
+  // it("should respond with 400 if insufficient funds");
+  // it("should respond with 400 if invalid userArray");
 });
