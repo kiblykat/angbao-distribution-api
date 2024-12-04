@@ -3,7 +3,7 @@ import { distributeAngbaos } from "../controllers/angbaoController";
 
 const angbaoRouter = express.Router();
 
-angbaoRouter.get("/angbaos");
+// Endpoint: /angbaos
 angbaoRouter.post("/distribute", distributeAngbaos);
 
 export default angbaoRouter;
