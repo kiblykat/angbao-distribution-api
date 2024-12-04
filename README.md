@@ -1,5 +1,3 @@
-## Cynapse Coding Challenge
-
 ### Problem statement: Chinese Red Envelopes
 
 ---
