@@ -16,10 +16,15 @@ export const distributeAngbaos = async (
     //receive request from user
     let { currUserId, totAmountDollars, userArray } = req.body;
     if (!currUserId || !totAmountDollars || !userArray) {
-      res.status(400).json({ error: "Invalid Input" });
+      res.status(400).json({ error: "Missing Input" });
       return;
     }
     const currUserAccount = await userModel.findById(currUserId);
+
+    if (!currUserAccount) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
 
     //error handling for Insufficient funds
     const totAmountCents = dollarsToCents(parseFloat(totAmountDollars));
