@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db";
 
-// Mock the database connection (without this, the real connectDB will be used!)
+// Mock connectDB() (without this, the connectDB() function will call the actual db!)
 jest.mock("./config/db", () => jest.fn());
 
 dotenv.config();
@@ -25,8 +25,8 @@ jest.mock("./models/User", () => ({
     findById: jest
       .fn()
       .mockResolvedValue([{ _id: "2", username: "Jane", balance: 10000 }]),
+    findByIdAndUpdate: jest.fn(),
   },
-  findByIdAndUpdate: jest.fn(),
 }));
 
 app.use("/angbaos", angbaoRouter);
@@ -44,18 +44,28 @@ describe("Server", () => {
   });
 
   it("should respond to /users route", async () => {
-    const response = await request(app).get("/users");
+    const response = await request(app).get("/users"); //this will route to userRouter as defined above in app.use
     expect(response.status).toBe(200);
     expect(response.body.users).toHaveLength(2);
   }, 5000);
 
-  it("should respond to /angbaos route", async () => {
+  it("should respond 200 to /angbaos route", async () => {
+    //this will route to angbaoRouter as defined above in app.use
     const response = await request(app).post("/angbaos/distribute").send({
       currUserId: "674e7824a6cddab6818afe6f",
       totAmountDollars: "10.23",
       userArray:
         '["674e7824a6cddab6818afe6f","674e79c0cba2edf55d536255","674e79c5cba2edf55d536257"]',
     });
-    expect(response.status).not.toBe(404);
+    expect(response.status).toBe(200);
+  });
+
+  it("should return 400 for invalid angbao input", async () => {
+    const response = await request(app).post("/angbaos/distribute").send({
+      currUserId: "invalidId",
+      totAmountDollars: "notANumber",
+      userArray: "invalidArray",
+    });
+    expect(response.status).toBe(400);
   });
 });
