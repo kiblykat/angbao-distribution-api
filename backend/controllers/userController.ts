@@ -6,7 +6,7 @@ export async function getAllUsers(req: Request, res: Response): Promise<void> {
     const users = await userModel.find();
     res.status(200).json({ users: users });
   } catch (err) {
-    res.status(500).json({ err: err });
+    res.status(500).json({ error: err });
   }
 }
 
@@ -22,8 +22,8 @@ export async function createUser(req: Request, res: Response): Promise<void> {
     const response = await userModel.create({ username: username });
     res.status(201).json(response);
   } catch (err) {
-    console.log({ err: err });
-    res.status(500).json({ err: err });
+    console.log({ error: err });
+    res.status(500).json({ error: err });
   }
 }
 
@@ -37,7 +37,7 @@ export async function deleteUser(req: Request, res: Response): Promise<void> {
     }
     res.status(200).json(response);
   } catch (err) {
-    res.status(500).json({ err: err });
+    res.status(500).json({ error: err });
   }
 }
 
@@ -53,6 +53,6 @@ export async function getSingleUser(req: Request, res: Response) {
 
     res.status(200).json({ user });
   } catch (err) {
-    res.status(500).json({ err: err });
+    res.status(500).json({ error: err });
   }
 }
