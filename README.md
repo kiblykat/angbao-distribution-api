@@ -1,42 +1,33 @@
-### Problem statement: Chinese Red Envelopes
+# 💌 Angbao Distribution API
 
----
+## Preamble
 
-In Chinese culture, it is popular to offer red envelopes (Angpao) for Chinese New Year. This beloved tradition has been going on for centuries.
-However, in the past few years, red envelopes have been moved into popular mobile phone applications. In addition to the traditional red envelope gifts,
-a popular mobile game has emerged: families use services such as WeChat group red packets to distribute digital red envelopes to a group of family members or friends.
-Money is distributed randomly to a group of friends or family members and people are excited to see the results.
+This project communicates with a mongodb database to distribute a random amount of money to multiple people. For easy access to the database to public without exposing sensitive environment variables, I have hosted the app is hosted on vercel. I have included endpoints for user creation and deletion as well for increased accessibility. Postman will be used to test the endpoints. The github repository can be found here: https://github.com/kiblykat/angbao-distribution-api.
 
-### Scenario:
+Note: Money is stored in cents to prevent floating point conversion issues.
 
----
+## Setup Instructions
 
-User A wants to share $10 among 5 different friends. The algorithm randomly attributes part of the amount to each of the participants:
-<br/>
-<br/>B: $1
-<br/>C: $4
-<br/>D: $3
-<br/>E: $0.5
-<br/>F: $1.5
-<br/><br/>
-In that case, each of the participants receives money in their wallet and user C is the one who receives the most money.
+### Running the program
 
-### Instructions
+1. Ensure Postman is downloaded on your computer.
+2. Open Postman app, on the top-left hand corner, click the Import button beside "My Workspace". A popup window should appear.
+3. After extracting the zip folder, enter the "Postman" folder
+4. Drag the "Angbaobao.postman_collection.json" onto the popup window in step 2.
+5. Navigate through the different endpoint on the left side to test the endpoints. These endpoints are hosted on Vercel.
+6. The relevant endpoints are:
+   - https://angbaobao.vercel.app/users (for any user related endpoints)
+   - https://angbaobao.vercel.app/angbaos/distribute (only has POST endpoint to randomly distribute angbaos)
 
----
+### Testing
 
-Your goal is to write a program that:
-<br/> 1. **Randomly allocates a set amount of money to a set number of participants**.
-<br /> 2. **Using automated Unit Testing, you should show that your algorithm behaves properly in multiple scenarios.**
-<br /> 3. **Use any practices that you would recommend to your peers** such as clean code principles, linting, clear git commit messages, etc.
-<br/> 4. **Write Setup Instructions in README** after you are done!
+1. After extracting the zip folder, enter the "backend" folder
+2. Open terminal and install relevant dependencies by typing "npm i"
+3. After dependencies are installed, type "npm run test" to run all test cases available.
+4. To check decision coverage, run "npx jest --coverage"
 
-<br/>The challenge might be done in any language you are proficient in.
+## Tech Stack
 
-### Sharing your project with us
-
----
-
-When done, you can simply zip your project and share it with us over email
-
-### INCLUDE SETUP INSTRUCTIONS
+- Backend: Node.js, Express, TypeScript, Mongoose
+- Database: MongoDB
+- Testing: Jest

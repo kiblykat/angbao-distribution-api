@@ -1,0 +1,140 @@
+{
+	"info": {
+		"_postman_id": "bbf509c1-bb26-4504-a7d5-bd2dfa7eacc2",
+		"name": "Angbaobao",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33379444"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://angbaobao.vercel.app/users",
+							"protocol": "https",
+							"host": [
+								"angbaobao",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://angbaobao.vercel.app/users/674dcad282b19cbaadf64aa5",
+							"protocol": "https",
+							"host": [
+								"angbaobao",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"users",
+								"674dcad282b19cbaadf64aa5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Single User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"almondCupcake\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://angbaobao.vercel.app/users",
+							"protocol": "https",
+							"host": [
+								"angbaobao",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Single User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://angbaobao.vercel.app/67501647c5c6efdf83d0a9e6",
+							"protocol": "https",
+							"host": [
+								"angbaobao",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"67501647c5c6efdf83d0a9e6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Angbaos",
+			"item": [
+				{
+					"name": "Distribute Angbaos",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"currUserId\":\"674e79cdcba2edf55d53625b\",\r\n    \"totAmountDollars\":\"10\",\r\n    \"userArray\":\"[\\\"67501647c5c6efdf83d0a9e6\\\", \\\"67513e6bb3154473c973f999\\\"]\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://angbaobao.vercel.app/angbaos/distribute",
+							"protocol": "https",
+							"host": [
+								"angbaobao",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"angbaos",
+								"distribute"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
