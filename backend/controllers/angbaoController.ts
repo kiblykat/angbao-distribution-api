@@ -28,11 +28,9 @@ export const distributeAngbaos = async (
 
     //error handling for Insufficient funds
     const totAmountCents = dollarsToCents(parseFloat(totAmountDollars));
-    if (currUserAccount) {
-      if (currUserAccount?.balance < totAmountCents) {
-        res.status(400).json({ error: "Insufficient funds" });
-        return;
-      }
+    if (currUserAccount.balance < totAmountCents) {
+      res.status(400).json({ error: "Insufficient funds" });
+      return;
     }
 
     //error handling for Invalid userArray
