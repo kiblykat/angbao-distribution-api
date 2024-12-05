@@ -137,4 +137,18 @@ describe("userController", () => {
       },
     });
   });
+
+  it("should return 404 if user not found when getting a single user", async () => {
+    (userModel.findById as jest.Mock).mockResolvedValue(null);
+    const response = await request(app).get("/users/user1");
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: "User not found" });
+  });
+
+  it("should return an error with status code 500 when getting a single user", async () => {
+    (userModel.findById as jest.Mock).mockRejectedValue("Database Error");
+    const response = await request(app).get("/users/user1");
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ error: "Database Error" });
+  });
 });
