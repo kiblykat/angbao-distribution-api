@@ -41,11 +41,17 @@ describe("userController", () => {
     });
   });
 
-  it("should return an error with status code 500", async () => {
+  it("should return an error with status code 500 for getAllUsers", async () => {
     (userModel.find as jest.Mock).mockRejectedValue("Database Error");
     const response = await request(app).get("/users");
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: "Database Error" });
+  });
+
+  it("should return 400 if username is missing", async () => {
+    const response = await request(app).post("/users").send({});
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ error: "username is required" });
   });
 
   it("should successfully create a user with status 201", async () => {
@@ -69,5 +75,14 @@ describe("userController", () => {
       balance: 50000,
       __v: 0,
     });
+  });
+
+  it("should return an error with status code 500 when creating a user", async () => {
+    (userModel.create as jest.Mock).mockRejectedValue("Database Error");
+    const response = await request(app).post("/users").send({
+      username: "Tanjiro",
+    });
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ error: "Database Error" });
   });
 });
