@@ -24,7 +24,7 @@ describe("userController", () => {
 
   it("should getAllUsers with status code 200", async () => {
     (userModel.find as jest.Mock).mockResolvedValue({
-      _id: "674dcad282b19cbaadf64aa5",
+      _id: "user1",
       username: "John",
       balance: 5100,
       __v: 0,
@@ -33,7 +33,7 @@ describe("userController", () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       users: {
-        _id: "674dcad282b19cbaadf64aa5",
+        _id: "user1",
         username: "John",
         balance: 5100,
         __v: 0,
@@ -56,21 +56,21 @@ describe("userController", () => {
 
   it("should successfully create a user with status 201", async () => {
     (userModel.create as jest.Mock).mockResolvedValue({
-      _id: "674dcad282b19cbaadf64aa5",
+      _id: "user1",
       username: "Tanjiro",
       balance: 50000,
       __v: 0,
     });
 
     const response = await request(app).post("/users").send({
-      _id: "674dcad282b19cbaadf64aa5",
+      _id: "user1",
       username: "Tanjiro",
       balance: 50000,
       __v: 0,
     });
     expect(response.status).toBe(201);
     expect(response.body).toEqual({
-      _id: "674dcad282b19cbaadf64aa5",
+      _id: "user1",
       username: "Tanjiro",
       balance: 50000,
       __v: 0,
@@ -88,17 +88,15 @@ describe("userController", () => {
 
   it("should delete a user with status code 200", async () => {
     (userModel.findByIdAndDelete as jest.Mock).mockResolvedValue({
-      _id: "674dcad282b19cbaadf64aa5",
+      _id: "user1",
       username: "John",
       balance: 5100,
       __v: 0,
     });
-    const response = await request(app).delete(
-      "/users/674dcad282b19cbaadf64aa5"
-    );
+    const response = await request(app).delete("/users/user1");
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
-      _id: "674dcad282b19cbaadf64aa5",
+      _id: "user1",
       username: "John",
       balance: 5100,
       __v: 0,
@@ -107,9 +105,7 @@ describe("userController", () => {
 
   it("should return 404 if user not found when deleting", async () => {
     (userModel.findByIdAndDelete as jest.Mock).mockResolvedValue(null);
-    const response = await request(app).delete(
-      "/users/674dcad282b19cbaadf64aa5"
-    );
+    const response = await request(app).delete("/users/user1");
     expect(response.status).toBe(404);
     expect(response.body).toEqual({ error: "userModel not found" });
   });
@@ -118,9 +114,7 @@ describe("userController", () => {
     (userModel.findByIdAndDelete as jest.Mock).mockRejectedValue(
       "Database Error"
     );
-    const response = await request(app).delete(
-      "/users/674dcad282b19cbaadf64aa5"
-    );
+    const response = await request(app).delete("/users/user1");
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: "Database Error" });
   });
