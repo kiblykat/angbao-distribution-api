@@ -15,7 +15,7 @@ export async function createUser(req: Request, res: Response): Promise<void> {
     const { username } = req.body;
 
     if (!username) {
-      res.status(400).json({ error: "username is required" });
+      res.status(400).json({ error: "Username is required" });
       return;
     }
 
@@ -32,7 +32,7 @@ export async function deleteUser(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     const response = await userModel.findByIdAndDelete(id);
     if (!response) {
-      res.status(404).json({ error: "completedModel not found" });
+      res.status(404).json({ error: "userModel not found" });
       return;
     }
     res.status(200).json(response);

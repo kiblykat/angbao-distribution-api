@@ -51,7 +51,7 @@ describe("userController", () => {
   it("should return 400 if username is missing", async () => {
     const response = await request(app).post("/users").send({});
     expect(response.status).toBe(400);
-    expect(response.body).toEqual({ error: "username is required" });
+    expect(response.body).toEqual({ error: "Username is required" });
   });
 
   it("should successfully create a user with status 201", async () => {
@@ -84,5 +84,24 @@ describe("userController", () => {
     });
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: "Database Error" });
+  });
+
+  it("should delete a user with status code 200", async () => {
+    (userModel.findByIdAndDelete as jest.Mock).mockResolvedValue({
+      _id: "674dcad282b19cbaadf64aa5",
+      username: "John",
+      balance: 5100,
+      __v: 0,
+    });
+    const response = await request(app).delete(
+      "/users/674dcad282b19cbaadf64aa5"
+    );
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      _id: "674dcad282b19cbaadf64aa5",
+      username: "John",
+      balance: 5100,
+      __v: 0,
+    });
   });
 });
