@@ -104,4 +104,24 @@ describe("userController", () => {
       __v: 0,
     });
   });
+
+  it("should return 404 if user not found when deleting", async () => {
+    (userModel.findByIdAndDelete as jest.Mock).mockResolvedValue(null);
+    const response = await request(app).delete(
+      "/users/674dcad282b19cbaadf64aa5"
+    );
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: "userModel not found" });
+  });
+
+  it("should return an error with status code 500 when deleting a user", async () => {
+    (userModel.findByIdAndDelete as jest.Mock).mockRejectedValue(
+      "Database Error"
+    );
+    const response = await request(app).delete(
+      "/users/674dcad282b19cbaadf64aa5"
+    );
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ error: "Database Error" });
+  });
 });
