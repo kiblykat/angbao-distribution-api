@@ -47,4 +47,27 @@ describe("userController", () => {
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: "Database Error" });
   });
+
+  it("should successfully create a user with status 201", async () => {
+    (userModel.create as jest.Mock).mockResolvedValue({
+      _id: "674dcad282b19cbaadf64aa5",
+      username: "Tanjiro",
+      balance: 50000,
+      __v: 0,
+    });
+
+    const response = await request(app).post("/users").send({
+      _id: "674dcad282b19cbaadf64aa5",
+      username: "Tanjiro",
+      balance: 50000,
+      __v: 0,
+    });
+    expect(response.status).toBe(201);
+    expect(response.body).toEqual({
+      _id: "674dcad282b19cbaadf64aa5",
+      username: "Tanjiro",
+      balance: 50000,
+      __v: 0,
+    });
+  });
 });
