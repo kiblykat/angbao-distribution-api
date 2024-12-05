@@ -30,6 +30,9 @@ jest.mock("../services/dollarCentsConverter", () => ({
 }));
 
 describe("angbaoController", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
   //Status 200 returns
   it("should distribute angbaos and return status code 200", async () => {
     //1. Mock behavior of child funcs expected to be called within parent func
@@ -73,6 +76,18 @@ describe("angbaoController", () => {
     expect(response.body).toEqual({ error: "Missing Input" });
   });
 
+  // - missing user
+  it("should return with 404 if user not found", async () => {
+    (userModel.findById as jest.Mock).mockResolvedValue(null);
+    const response = await request(app).post("/angbaos/distribute").send({
+      currUserId: "user1",
+      totAmountDollars: "1.03",
+      userArray: '["user2","user3","user4"]',
+    });
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: "User not found" });
+  });
+
   // - insufficient funds
   it("should respond with 400 for insufficient funds", async () => {
     (userModel.findById as jest.Mock).mockResolvedValue({ balance: 500 });
@@ -96,5 +111,16 @@ describe("angbaoController", () => {
     });
     expect(response.status).toBe(400);
     expect(response.body).toEqual({ error: "Invalid userArray" });
+  });
+
+  it("should respond with status 500 and server error message", async () => {
+    (userModel.findById as jest.Mock).mockRejectedValue("Database Error");
+    let response = await request(app).post("/angbaos/distribute").send({
+      currUserId: "user1",
+      totAmountDollars: "10.23",
+      userArray: "[user2,user3,user4]",
+    });
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ error: "Database Error" });
   });
 });
