@@ -118,4 +118,23 @@ describe("userController", () => {
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: "Database Error" });
   });
+
+  it("should get a single user with status code 200", async () => {
+    (userModel.findById as jest.Mock).mockResolvedValue({
+      _id: "user1",
+      username: "Zenitsu",
+      balance: 5100,
+      __v: 0,
+    });
+    const response = await request(app).get("/users/user1");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      user: {
+        _id: "user1",
+        username: "Zenitsu",
+        balance: 5100,
+        __v: 0,
+      },
+    });
+  });
 });
