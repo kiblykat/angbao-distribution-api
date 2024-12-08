@@ -26,8 +26,14 @@ export const distributeAngbaos = async (
       return;
     }
 
-    //error handling for Insufficient funds
     const totAmountCents = dollarsToCents(parseFloat(totAmountDollars));
+    //error handling for negative value
+    if (totAmountCents <= 0) {
+      res.status(400).json({ error: "Input should be a positive value" });
+      return;
+    }
+
+    //error handling for Insufficient funds
     if (currUserAccount.balance < totAmountCents) {
       res.status(400).json({ error: "Insufficient funds" });
       return;

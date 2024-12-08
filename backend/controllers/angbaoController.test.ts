@@ -113,6 +113,25 @@ describe("angbaoController", () => {
     expect(response.body).toEqual({ error: "Invalid userArray" });
   });
 
+  it("should respond with a 400 with message input should be a positive value", async () => {
+    (userModel.findById as jest.Mock).mockResolvedValue({
+      username: "user1",
+      balance: "5000",
+    });
+    (dollarsToCents as jest.Mock).mockReturnValue(-1);
+
+    const response = await request(app).post("/angbaos/distribute").send({
+      currUserId: "user1",
+      totAmountDollars: "-1",
+      userArray: '["user1","user2","user3"]',
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      error: "Input should be a positive value",
+    });
+  });
+
   it("should respond with status 500 and server error message", async () => {
     (userModel.findById as jest.Mock).mockRejectedValue("Database Error");
     let response = await request(app).post("/angbaos/distribute").send({
