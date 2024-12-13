@@ -18,11 +18,9 @@ export async function createUser(req: Request, res: Response): Promise<void> {
       res.status(400).json({ error: "Username is required" });
       return;
     }
-
     const response = await userModel.create({ username: username });
     res.status(201).json(response);
   } catch (err) {
-    console.log({ error: err });
     res.status(500).json({ error: err });
   }
 }
